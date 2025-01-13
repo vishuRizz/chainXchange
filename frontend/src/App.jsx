@@ -1,20 +1,19 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-
-function App() {
-  const [count, setCount] = useState(0)
-
+import React from "react";
+import { BrowserRouter,Route, Routes } from "react-router-dom";
+import Login from "./Login";
+import Fullpage from "./FullPage";
+const App = () => {
   return (
-    <>
-    <div class="container py-4 px-3 mx-auto">
-      <h1>Hello, Bootstrap and Vite!</h1>
-      <button class="btn btn-primary">Primary button</button>
-    </div>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Fullpage />} />
+          <Route path="/login" element={<Login />} />
+        </Routes>
+      </BrowserRouter>
+          
+        
     
-    </>
-  )
-}
+  );
+};
 
-export default App
+export default App;
