@@ -1,48 +1,35 @@
-// // server.js
-// require('dotenv').config();
-// const express = require('express');
-// const mongoose = require('mongoose');
-// const itemRoutes = require('./routes/itemRoutes');
-// // const transactionRoutes = require('./routes/transactionRoutes');
-// import transactionRoutes from './routes/transactionRoutes'
-
-// const app = express();
-// app.use(express.json());
-
-// // Routes
-// app.use('/api', itemRoutes);
-// app.use('/api', transactionRoutes);
-
-// // MongoDB Connection
-// mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-//     .then(() => console.log('MongoDB Connected'))
-//     .catch(err => console.log(err));
-
-// // Start Server
-// const PORT = process.env.PORT || 5000;
-// app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-// Import necessary modules
-
 const express = require("express");
 const cors = require("cors");
-const { ClerkExpressRequireAuth } = require("@clerk/clerk-sdk-node");
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+
+dotenv.config();
+const rootRouter = require("./routes/index");
 
 const app = express();
-const PORT = process.env.PORT || 5000;
-
-// Middleware
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+app.use(cors({
+  origin: "*", 
+  methods: ["POST", "GET", "PUT", "DELETE", "OPTIONS"],  
+  credentials: false,
+}));
 app.use(express.json());
 
-// Protected route
-app.get("/profile", ClerkExpressRequireAuth(), (req, res) => {
-    console.log(req.auth); // Debugging the auth object
-    if (!req.auth.user) {
-      return res.status(401).json({ error: "User not authenticated" });
-    }
-    const user = req.auth.user;
-    res.json({ message: `Hello, ${user.firstName}!`, user });
-  });
-  
+// MongoDB Connection
+mongoose
+  .connect("mongodb+srv://vishurizz01:HwCmM3l7rF7YZkvp@cluster0.7ozbuch.mongodb.net/chainX", { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log("Connected to MongoDB"))
+  .catch((err) => console.error("MongoDB connection error:", err));
 
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+// Routes
+app.use("/api/v1", rootRouter);
+
+// Default Route
+app.get("/", (req, res) => {
+  res.json({ message: "Welcome to ChainXChange API" });
+});
+
+// Server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
