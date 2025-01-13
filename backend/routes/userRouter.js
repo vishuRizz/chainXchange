@@ -4,7 +4,9 @@ const { User } = require("../models/db");
 const router = express.Router();
 
 // Create a user
-router.post("/", async (req, res) => {
+router.post("/register", async (req, res) => {
+  // console.log("Request received:", req.body); // Debug log
+
   const { clerkUserId, name, email, credits, cryptoWalletAddress } = req.body;
 
   if (!clerkUserId || !email) {
@@ -12,14 +14,18 @@ router.post("/", async (req, res) => {
   }
 
   try {
-    const user = new User({ clerkUserId, name, email, credits, cryptoWalletAddress });
-    await user.save();
-    res.status(201).json({ message: "User created successfully", user });
+    let user = await User.findOne({ clerkUserId });
+    if (!user) {
+      user = new User({ clerkUserId, name, email, credits, cryptoWalletAddress });
+      await user.save();
+    }
+    res.status(200).json({ message: "User registered successfully", user });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Failed to create user" });
+    console.error("Error in /register:", error); // Debug log
+    res.status(500).json({ error: "Internal server error" });
   }
 });
+
 
 // Get all users
 router.get("/", async (req, res) => {

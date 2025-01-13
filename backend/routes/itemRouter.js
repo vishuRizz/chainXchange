@@ -1,18 +1,33 @@
 const express = require("express");
-const { Item } = require("../models/db");
+const { Item, User } = require("../models/db");
 
 const router = express.Router();
 
 // Create an item
 router.post("/", async (req, res) => {
-  const { itemId, name, description, price, currency, owner } = req.body;
-
-  if (!itemId || !name || !price || !owner) {
-    return res.status(400).json({ error: "itemId, name, price, and owner are required" });
+  const { itemId, name, description, price, currency, clerkUserId } = req.body;
+  // Validate required fields
+  if ( !name || !price || !clerkUserId) {
+    return res.status(400).json({ error: " name, price, and clerkUserId are required" });
   }
 
   try {
-    const item = new Item({ itemId, name, description, price, currency, owner });
+    // Find the owner by clerkUserId
+    const owner = await User.findOne({ clerkUserId: clerkUserId });
+    if (!owner) {
+      return res.status(404).json({ error: "Owner not found" });
+    }
+
+    // Create the new item
+    const item = new Item({
+      itemId, // Ensure itemId is unique or auto-generated
+      name,
+      description,
+      price,
+      currency,
+      owner: owner._id, // Use the _id of the owner
+    });
+
     await item.save();
     res.status(201).json({ message: "Item created successfully", item });
   } catch (error) {
@@ -20,6 +35,7 @@ router.post("/", async (req, res) => {
     res.status(500).json({ error: "Failed to create item" });
   }
 });
+
 
 // Get all items
 router.get("/", async (req, res) => {

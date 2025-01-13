@@ -1,16 +1,7 @@
 const mongoose = require("mongoose");
 require("dotenv").config();
 const { Schema } = mongoose;
-// const mongoUri = process.env.MONGO_URI;
-// console.log(mongoUri);
-// mongoose
-//   .connect(
-//     mongoUri,
-//     { useNewUrlParser: true, useUnifiedTopology: true }
-//   )
-//   .then(() => console.log("haha, connected to MongoDB"))
-//   .catch((err) => console.error("MongoDB connection error:", err));
-
+const { v4: uuidv4 } = require("uuid");
 
 // User Schema
 const userSchema = new Schema({
@@ -24,7 +15,7 @@ const userSchema = new Schema({
 
 // Item Schema
 const itemSchema = new Schema({
-  itemId: { type: String, required: true, unique: true }, // Unique item identifier
+  itemId: { type: String, default: () => uuidv4(), unique: true },
   name: { type: String, required: true },
   description: { type: String },
   price: { type: Number, required: true },
