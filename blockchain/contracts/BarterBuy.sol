@@ -14,20 +14,9 @@ contract BarterBuy {
 
     uint public transactionCount;
 
-    mapping(uint => address) public itemOwners; // Maps item ID to owner
     mapping(uint => Transaction) public transactions;
 
     event TransactionFinalized(uint transactionId, address initiator, address responder, uint item1Id, uint item2Id, uint price, string status);
-
-    // Internal function to transfer ownership during transaction finalization
-    function transferOwnership(uint _itemId, address _newOwner) internal {
-        itemOwners[_itemId] = _newOwner;
-    }
-
-    // Public function to set item ownership (for setup/testing purposes)
-    function setItemOwnership(uint _itemId, address _owner) public {
-        itemOwners[_itemId] = _owner;
-    }
 
     function finalizeTransaction(
         uint _item1Id,
@@ -35,9 +24,6 @@ contract BarterBuy {
         uint _price,
         address _responder
     ) public {
-        require(itemOwners[_item1Id] == msg.sender, "You do not own this item");
-        require(itemOwners[_item2Id] == _responder, "Responder does not own item2");
-
         transactionCount++;
         transactions[transactionCount] = Transaction(
             transactionCount,
@@ -76,8 +62,5 @@ contract BarterBuy {
             txn.price,
             txn.status
         );
-
-        transferOwnership(txn.item1Id, itemOwners[txn.item2Id]);
-        transferOwnership(txn.item2Id, txn.initiator);
     }
 }
