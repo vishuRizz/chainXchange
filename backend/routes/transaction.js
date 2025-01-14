@@ -163,7 +163,7 @@ const ABI = [
 ];
 
 const provider = new JsonRpcProvider("http://127.0.0.1:8545"); // Local Hardhat node
-const privateKey = "90e2489f526e4278b6158062ebf735f0f21352e8f1bc3392ae326039341a6546";
+const privateKey = "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
 const wallet = new ethers.Wallet(privateKey, provider);
 
 // Contract details
@@ -178,14 +178,38 @@ router.post("/finalizeTransaction", async (req, res) => {
   try {
     const { item1Id, item2Id, price, responder } = req.body;
 
-    const tx = await contract.finalizeTransaction(item1Id, item2Id, price, responder);
-    await tx.wait();
+    if (!item1Id || !item2Id || !price || !responder) {
+      return res.status(400).json({ error: "All fields are required." });
+    }
 
-    res.status(200).json({ message: "Transaction finalized successfully!", txHash: tx.hash });
+    // Parse price to BigNumber
+    const parsedPrice = ethers.parseUnits(price, "wei");
+
+
+    // Call the smart contract function
+    const tx = await contract.finalizeTransaction(
+      item1Id,
+      item2Id,
+      parsedPrice,
+      responder,
+      { value: parsedPrice } // Send the Ether value
+    );
+
+    // Wait for transaction to be mined
+    const receipt = await tx.wait();
+
+    res.status(200).json({
+      message: "Transaction finalized successfully!",
+      txHash: receipt.transactionHash,
+      blockNumber: receipt.blockNumber,
+    });
   } catch (error) {
+    console.error(error); // Log error for debugging
     res.status(500).json({ error: error.message });
   }
 });
+
+
 
 // Complete Transaction API
 router.post("/completeTransaction", async (req, res) => {
