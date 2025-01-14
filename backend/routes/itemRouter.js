@@ -47,6 +47,21 @@ router.get("/", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch items" });
   }
 });
+router.get("/:clerkId", async (req, res) => {
+  const { clerkId } = req.params;
+  const user = await User.findOne({ clerkId: clerkId });
+  const id = user._id;
+  try {
+    const item = await Item.findById(id).populate("owner");
+    if (!item) {
+      return res.status(404).json({ error: "Item not found" });
+    }
+    res.status(200).json(item);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to fetch item" });
+  }
+})
 
 // Update an item
 router.put("/:id", async (req, res) => {
