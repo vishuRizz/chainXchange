@@ -13,6 +13,7 @@
     "@clerk/clerk-react": "^5.21.2",
     "axios": "^1.7.9",
     "bootstrap": "^5.3.3",
+    "ethers": "^6.13.5",
     "framer-motion": "^11.17.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

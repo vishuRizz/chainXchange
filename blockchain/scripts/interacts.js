@@ -1,7 +1,7 @@
 import hre from "hardhat";
 
 async function main() {
-  const contractAddress = "YOUR_DEPLOYED_CONTRACT_ADDRESS"; // Replace with actual deployed contract address
+  const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"; // Replace with actual deployed contract address
   const [sender, responder] = await hre.ethers.getSigners(); // Sender (initiator) and Responder
 
   const BarterBuy = await hre.ethers.getContractFactory("BarterBuy");
