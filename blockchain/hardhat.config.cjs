@@ -1,5 +1,5 @@
 const { config: dotenvConfig } = require("dotenv");
-require("@nomiclabs/hardhat-ethers");
+require("@nomicfoundation/hardhat-toolbox"); // Includes ethers, chai-matchers, etc.
 
 // Load environment variables from `.env` file
 dotenvConfig();

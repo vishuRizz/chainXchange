@@ -5,7 +5,7 @@ contract BarterBuy {
     struct Transaction {
         uint id;
         address initiator;
-        address responder;
+        address responder;  // Wallet address of the person wanting to purchase or initiating the barter
         uint item1Id; // For barter
         uint item2Id; // For barter or 0 for purchases
         uint price;   // Final agreed price for purchase
@@ -23,7 +23,9 @@ contract BarterBuy {
         uint _item2Id,
         uint _price,
         address _responder
-    ) public {
+    ) public payable {
+        require(msg.value == _price, "Incorrect payment amount");
+
         transactionCount++;
         transactions[transactionCount] = Transaction(
             transactionCount,
@@ -52,6 +54,9 @@ contract BarterBuy {
         require(keccak256(abi.encodePacked(txn.status)) == keccak256(abi.encodePacked("pending")), "Transaction is not in pending state");
 
         txn.status = "completed";
+
+        // Transfer funds to the responder
+        payable(txn.responder).transfer(txn.price);
 
         emit TransactionFinalized(
             _transactionId,

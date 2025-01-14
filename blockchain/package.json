@@ -14,12 +14,14 @@
   "type": "module",
   "description": "",
   "devDependencies": {
-    "@nomiclabs/hardhat-ethers": "^2.2.3",
+    "@nomicfoundation/hardhat-ethers": "^3.0.8",
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "chai": "^4.5.0",
     "dotenv": "^16.4.7",
-    "ethers": "^5.7.2",
-    "hardhat": "^2.22.17"
+    "ethers": "^6.13.5",
+    "hardhat": "^2.22.18"
   },
   "dependencies": {
-    "chai": "^5.1.2"
+    "@nomicfoundation/hardhat-chai-matchers": "^2.0.8"
   }
 }

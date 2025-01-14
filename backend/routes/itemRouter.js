@@ -52,7 +52,7 @@ router.get("/:clerkId", async (req, res) => {
   const user = await User.findOne({ clerkId: clerkId });
   const id = user._id;
   try {
-    const item = await Item.findById(id).populate("owner");
+    const user = await User.findById(id).populate("owner");
     if (!item) {
       return res.status(404).json({ error: "Item not found" });
     }
