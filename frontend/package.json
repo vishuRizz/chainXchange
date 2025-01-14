@@ -13,10 +13,12 @@
     "@clerk/clerk-react": "^5.21.2",
     "axios": "^1.7.9",
     "bootstrap": "^5.3.3",
+    "framer-motion": "^11.17.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-modal": "^3.16.3",
-    "react-router-dom": "^7.1.1"
+    "react-router-dom": "^7.1.1",
+    "styled-components": "^6.1.14"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",
