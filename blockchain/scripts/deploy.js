@@ -8,9 +8,10 @@ async function main() {
   const BarterBuy = await hre.ethers.getContractFactory("BarterBuy");
   const barterBuy = await BarterBuy.deploy();
 
-  await barterBuy.deployed();
+  await barterBuy.waitForDeployment();
 
-  console.log("BarterBuy deployed to:", barterBuy.address);
+  const address = await barterBuy.getAddress();
+  console.log("BarterBuy deployed to:", address);
 }
 
 main()
