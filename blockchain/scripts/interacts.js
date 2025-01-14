@@ -10,15 +10,24 @@ async function main() {
   // Example items
   const item1Id = 1; // Item 1 (Offered by initiator)
   const item2Id = 2; // Item 2 (Offered by responder)
-  const price = 100; // Final agreed price
+  const price = ethers.parseEther("1"); // Parse 1 Ether
+
 
   // Initiator (sender) finalizes the transaction with responder
-  const tx = await contract.finalizeTransaction(item1Id, item2Id, price, responder.address);
+  console.log("Finalizing transaction...");
+  const tx = await contract.connect(sender).finalizeTransaction(
+    item1Id,
+    item2Id,
+    price, 
+    responder.address,
+    { value: price } // Pass Ether value in Wei
+  );
   await tx.wait(); // Wait for the transaction to be mined
   console.log("Transaction finalized!");
-  
+
   // After both parties agree, the responder can complete the transaction
-  const completeTx = await contract.completeTransaction(1); // Transaction ID passed as example (update accordingly)
+  console.log("Completing transaction...");
+  const completeTx = await contract.connect(responder).completeTransaction(1); // Transaction ID passed as example (update accordingly)
   await completeTx.wait();
   console.log("Transaction completed!");
 }
